@@ -25,7 +25,7 @@
   .stat-card {
     flex: 1;
     min-width: 130px;
-    background-color: #5B7FC4;
+    background-color: #A9D0F5;
     border-radius: 8px;
     padding: 14px 16px;
     text-align: center;
@@ -33,7 +33,7 @@
   .stat-number {
     font-size: 22px;
     font-weight: 600;
-    color: #ffffff;
+    color: #2c2c2a;
   }
   .stat-source .stat-number {
     font-size: 15px;
@@ -41,7 +41,7 @@
   }
   .stat-label {
     font-size: 12px;
-    color: #e6f0ff;
+    color: #555;
     margin-top: 4px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -134,7 +134,7 @@ const commonLayout = {
   dragmode: false,
   margin: { t: 40, r: 20, l: 50, b: 70 },
   paper_bgcolor: "#ffffff",
-  plot_bgcolor: "#5B7FC4",
+  plot_bgcolor: "#A9D0F5",
 };
 const commonConfig = {
   displayModeBar: false,
@@ -151,7 +151,7 @@ function renderEpisodes(maxSeason) {
     marker: { color: "#f5c518" },
     text: filtered.map(d => d.count),
     textposition: "outside",
-    textfont: { color: "#ffffff" },
+    textfont: { color: "#2c2c2a" },
     hovertemplate: "Season %{x}<br>%{y} episodes<extra></extra>",
   }], {
     ...commonLayout,
@@ -175,7 +175,7 @@ function renderCharacters() {
     marker: { color: "#67b7dc" },
     text: charactersData.map(d => d.count),
     textposition: "outside",
-    textfont: { color: "#ffffff" },
+    textfont: { color: "#2c2c2a" },
     hovertemplate: "%{x}<br>%{y} characters<extra></extra>",
   }], {
     ...commonLayout,
@@ -193,7 +193,7 @@ function renderLocations() {
     marker: { color: "#8fce7e" },
     text: locationsData.map(d => d.count),
     textposition: "outside",
-    textfont: { color: "#ffffff" },
+    textfont: { color: "#2c2c2a" },
     hovertemplate: "%{x}<br>%{y} locations<extra></extra>",
   }], {
     ...commonLayout,
