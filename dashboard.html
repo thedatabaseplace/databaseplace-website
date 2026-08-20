@@ -81,6 +81,27 @@
   .slider-row input[type=range] { flex: 1; accent-color: #7ec8e3; }
   .slider-row span { font-size: 13px; font-weight: 500; min-width: 20px; }
  
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .toggle-btn {
+    border: 1px solid #d7e6f5;
+    background: #ffffff;
+    color: #555;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .toggle-btn.active {
+    background: #A9D0F5;
+    border-color: #A9D0F5;
+    color: #2c2c2a;
+  }
+ 
   #chart { width: 100%; height: 480px; }
 </style>
 </head>
@@ -122,12 +143,21 @@
   </div>
 </div>
  
+<div id="panel-characters" class="tab-panel">
+  <div class="toggle-row">
+    <button class="toggle-btn active" data-view="status">By Status</button>
+    <button class="toggle-btn" data-view="quotes">Most Quoted</button>
+  </div>
+</div>
+ 
 <div id="chart"></div>
  
 <script>
 const episodesData = [{"season": 1, "count": 13}, {"season": 2, "count": 22}, {"season": 3, "count": 24}, {"season": 4, "count": 22}, {"season": 5, "count": 22}, {"season": 6, "count": 25}, {"season": 7, "count": 25}, {"season": 8, "count": 25}, {"season": 9, "count": 25}, {"season": 10, "count": 23}, {"season": 11, "count": 22}, {"season": 12, "count": 21}, {"season": 13, "count": 22}, {"season": 14, "count": 22}, {"season": 15, "count": 22}, {"season": 16, "count": 21}, {"season": 17, "count": 22}, {"season": 18, "count": 22}, {"season": 19, "count": 20}, {"season": 20, "count": 21}, {"season": 21, "count": 23}, {"season": 22, "count": 22}, {"season": 23, "count": 22}, {"season": 24, "count": 22}, {"season": 25, "count": 22}, {"season": 26, "count": 22}, {"season": 27, "count": 22}, {"season": 28, "count": 22}, {"season": 29, "count": 21}, {"season": 30, "count": 23}, {"season": 31, "count": 22}, {"season": 32, "count": 22}, {"season": 33, "count": 22}, {"season": 34, "count": 22}, {"season": 35, "count": 18}];
 const charactersData = [{"gender": "Male", "count": 741}, {"gender": "Female", "count": 330}, {"gender": "Unknown", "count": 111}];
-const locationsData = [{"use": "Unknown", "count": 121}, {"use": "Residential", "count": 27}, {"use": "Restaurant", "count": 13}, {"use": "Shop", "count": 7}, {"use": "Tourist attraction", "count": 5}, {"use": "Store", "count": 4}, {"use": "Street", "count": 4}, {"use": "District", "count": 4}, {"use": "Hotel", "count": 4}, {"use": "Fast food restaurant", "count": 4}, {"use": "Other", "count": 284}];
+const statusData = [{"status": "Alive", "count": 855}, {"status": "Deceased", "count": 136}, {"status": "Unknown", "count": 126}, {"status": "Fictional", "count": 50}, {"status": "Noncanon", "count": 9}, {"status": "Noncanon Deceased", "count": 4}, {"status": "Destroyed Icon", "count": 2}];
+const quotesData = [{"name": "Homer Simpson", "count": 15}, {"name": "Lisa Simpson", "count": 13}, {"name": "Fat Tony", "count": 11}, {"name": "Milhouse Van Houten", "count": 10}, {"name": "Bart Simpson", "count": 8}, {"name": "Groundskeeper Willie", "count": 8}, {"name": "Charles Montgomery Burns", "count": 7}, {"name": "Moe Szyslak", "count": 7}, {"name": "Clancy Wiggum", "count": 7}, {"name": "Apu Nahasapeemapetilon", "count": 6}];
+const locationsData = [{"word": "Springfield", "count": 98}, {"word": "House", "count": 13}, {"word": "Center", "count": 12}, {"word": "Evergreen", "count": 10}, {"word": "Terrace", "count": 10}, {"word": "Street", "count": 8}, {"word": "School", "count": 7}, {"word": "City", "count": 7}, {"word": "Shop", "count": 7}, {"word": "Stadium", "count": 6}];
  
 const commonLayout = {
   template: "plotly_white",
@@ -167,38 +197,65 @@ function renderEpisodes(maxSeason) {
   }, commonConfig);
 }
  
-function renderCharacters() {
+function renderCharactersStatus() {
   Plotly.newPlot("chart", [{
-    x: charactersData.map(d => d.gender),
-    y: charactersData.map(d => d.count),
+    x: statusData.map(d => d.status),
+    y: statusData.map(d => d.count),
     type: "bar",
     marker: { color: "#67b7dc" },
-    text: charactersData.map(d => d.count),
+    text: statusData.map(d => d.count),
     textposition: "outside",
     textfont: { color: "#2c2c2a" },
     hovertemplate: "%{x}<br>%{y} characters<extra></extra>",
   }], {
     ...commonLayout,
-    title: "Characters by gender",
-    xaxis: { title: "", fixedrange: true },
+    title: "Characters by status",
+    xaxis: { title: "", fixedrange: true, tickangle: -20 },
     yaxis: { title: "Number of characters", fixedrange: true },
   }, commonConfig);
 }
  
+function renderCharactersQuotes() {
+  const sorted = [...quotesData].sort((a, b) => a.count - b.count);
+  Plotly.newPlot("chart", [{
+    x: sorted.map(d => d.count),
+    y: sorted.map(d => d.name),
+    type: "bar",
+    orientation: "h",
+    marker: { color: "#67b7dc" },
+    text: sorted.map(d => d.count),
+    textposition: "outside",
+    textfont: { color: "#2c2c2a" },
+    hovertemplate: "%{y}<br>%{x} phrases<extra></extra>",
+  }], {
+    ...commonLayout,
+    title: "Top 10 most-quoted characters",
+    margin: { t: 40, r: 30, l: 180, b: 50 },
+    xaxis: { title: "Number of phrases logged", fixedrange: true },
+    yaxis: { title: "", fixedrange: true },
+  }, commonConfig);
+}
+ 
+let charactersView = "status";
+function renderCharacters() {
+  if (charactersView === "status") renderCharactersStatus();
+  else renderCharactersQuotes();
+}
+ 
 function renderLocations() {
   Plotly.newPlot("chart", [{
-    x: locationsData.map(d => d.use),
+    x: locationsData.map(d => d.word),
     y: locationsData.map(d => d.count),
     type: "bar",
-    marker: { color: "#8fce7e" },
+    marker: { color: "#ffdd00" },
     text: locationsData.map(d => d.count),
     textposition: "outside",
     textfont: { color: "#2c2c2a" },
-    hovertemplate: "%{x}<br>%{y} locations<extra></extra>",
+    hovertemplate: "%{x}<br>appears in %{y} location names<extra></extra>",
   }], {
     ...commonLayout,
-    title: "Top location types",
-    xaxis: { title: "", fixedrange: true, tickangle: -30 },
+    title: "Most common words in location names",
+    xaxis: { title: "", fixedrange: true, tickangle: -20 },
     yaxis: { title: "Number of locations", fixedrange: true },
   }, commonConfig);
 }
@@ -216,6 +273,16 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     if (tab === "episodes") renderEpisodes(parseInt(document.getElementById("seasonSlider").value));
     else if (tab === "characters") renderCharacters();
     else if (tab === "locations") renderLocations();
+  });
+});
+ 
+// Character view toggle
+document.querySelectorAll(".toggle-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    charactersView = btn.dataset.view;
+    renderCharacters();
   });
 });
  
