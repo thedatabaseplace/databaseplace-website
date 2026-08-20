@@ -1,3 +1,5 @@
+
+Index · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +17,38 @@
   }
   h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
   p.subtitle { color: #666; margin-top: 0; margin-bottom: 24px; font-size: 14px; }
-
+ 
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1;
+    min-width: 130px;
+    background-color: #cfe8fb;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-number {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2c2c2a;
+  }
+  .stat-source .stat-number {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #555;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+ 
   .tabs {
     display: flex;
     gap: 4px;
@@ -36,10 +69,10 @@
     color: #2c2c2a;
     border-bottom: 2px solid #f5c518;
   }
-
+ 
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
-
+ 
   .slider-row {
     display: flex;
     align-items: center;
@@ -49,21 +82,40 @@
   .slider-row label { font-size: 13px; color: #555; white-space: nowrap; }
   .slider-row input[type=range] { flex: 1; accent-color: #7ec8e3; }
   .slider-row span { font-size: 13px; font-weight: 500; min-width: 20px; }
-
+ 
   #chart { width: 100%; height: 480px; }
 </style>
 </head>
 <body>
-
+ 
 <h1>A Database Place</h1>
 <p class="subtitle">Exploring The Simpsons dataset</p>
-
+ 
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-number">1,182</div>
+    <div class="stat-label">Characters</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">768</div>
+    <div class="stat-label">Episodes</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">477</div>
+    <div class="stat-label">Locations</div>
+  </div>
+  <div class="stat-card stat-source">
+    <div class="stat-number">thesimpsonsapi.com</div>
+    <div class="stat-label">Data Source</div>
+  </div>
+</div>
+ 
 <div class="tabs">
   <button class="tab-btn active" data-tab="episodes">Episodes</button>
   <button class="tab-btn" data-tab="characters">Characters</button>
   <button class="tab-btn" data-tab="locations">Locations</button>
 </div>
-
+ 
 <div id="panel-episodes" class="tab-panel active">
   <div class="slider-row">
     <label>Show seasons up to:</label>
@@ -71,14 +123,14 @@
     <span id="seasonValue">35</span>
   </div>
 </div>
-
+ 
 <div id="chart"></div>
-
+ 
 <script>
 const episodesData = [{"season": 1, "count": 13}, {"season": 2, "count": 22}, {"season": 3, "count": 24}, {"season": 4, "count": 22}, {"season": 5, "count": 22}, {"season": 6, "count": 25}, {"season": 7, "count": 25}, {"season": 8, "count": 25}, {"season": 9, "count": 25}, {"season": 10, "count": 23}, {"season": 11, "count": 22}, {"season": 12, "count": 21}, {"season": 13, "count": 22}, {"season": 14, "count": 22}, {"season": 15, "count": 22}, {"season": 16, "count": 21}, {"season": 17, "count": 22}, {"season": 18, "count": 22}, {"season": 19, "count": 20}, {"season": 20, "count": 21}, {"season": 21, "count": 23}, {"season": 22, "count": 22}, {"season": 23, "count": 22}, {"season": 24, "count": 22}, {"season": 25, "count": 22}, {"season": 26, "count": 22}, {"season": 27, "count": 22}, {"season": 28, "count": 22}, {"season": 29, "count": 21}, {"season": 30, "count": 23}, {"season": 31, "count": 22}, {"season": 32, "count": 22}, {"season": 33, "count": 22}, {"season": 34, "count": 22}, {"season": 35, "count": 18}];
 const charactersData = [{"gender": "Male", "count": 741}, {"gender": "Female", "count": 330}, {"gender": "Unknown", "count": 111}];
 const locationsData = [{"use": "Unknown", "count": 121}, {"use": "Residential", "count": 27}, {"use": "Restaurant", "count": 13}, {"use": "Shop", "count": 7}, {"use": "Tourist attraction", "count": 5}, {"use": "Store", "count": 4}, {"use": "Street", "count": 4}, {"use": "District", "count": 4}, {"use": "Hotel", "count": 4}, {"use": "Fast food restaurant", "count": 4}, {"use": "Other", "count": 284}];
-
+ 
 const commonLayout = {
   template: "plotly_white",
   dragmode: false,
@@ -91,7 +143,7 @@ const commonConfig = {
   scrollZoom: false,
   responsive: true,
 };
-
+ 
 function renderEpisodes(maxSeason) {
   const filtered = episodesData.filter(d => d.season <= maxSeason);
   Plotly.newPlot("chart", [{
@@ -115,7 +167,7 @@ function renderEpisodes(maxSeason) {
     yaxis: { title: "Number of episodes", fixedrange: true, rangemode: "tozero" },
   }, commonConfig);
 }
-
+ 
 function renderCharacters() {
   Plotly.newPlot("chart", [{
     x: charactersData.map(d => d.gender),
@@ -132,7 +184,7 @@ function renderCharacters() {
     yaxis: { title: "Number of characters", fixedrange: true },
   }, commonConfig);
 }
-
+ 
 function renderLocations() {
   Plotly.newPlot("chart", [{
     x: locationsData.map(d => d.use),
@@ -149,7 +201,7 @@ function renderLocations() {
     yaxis: { title: "Number of locations", fixedrange: true },
   }, commonConfig);
 }
-
+ 
 // Tab switching
 document.querySelectorAll(".tab-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -159,23 +211,23 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     const tab = btn.dataset.tab;
     const panel = document.getElementById("panel-" + tab);
     if (panel) panel.classList.add("active");
-
+ 
     if (tab === "episodes") renderEpisodes(parseInt(document.getElementById("seasonSlider").value));
     else if (tab === "characters") renderCharacters();
     else if (tab === "locations") renderLocations();
   });
 });
-
+ 
 // Season slider
 const slider = document.getElementById("seasonSlider");
 slider.addEventListener("input", () => {
   document.getElementById("seasonValue").textContent = slider.value;
   renderEpisodes(parseInt(slider.value));
 });
-
+ 
 // Initial render
 renderEpisodes(35);
 </script>
-
+ 
 </body>
 </html>
