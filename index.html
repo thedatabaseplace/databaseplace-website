@@ -99,6 +99,8 @@
     transition: background 0.15s, transform 0.15s;
   }
   .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+  .btn-static { cursor: default; }
+  .btn-static:hover { background: var(--accent); transform: none; }
   .btn-secondary {
     font-family: var(--font-body); font-weight: 600; font-size: 15px;
     padding: 12px 24px; border-radius: 8px;
@@ -278,7 +280,7 @@
       <div class="contact-box">
         <h2>Want to see more or talk shop?</h2>
         <p>Open to connecting, sharing more of the work, or hearing feedback.</p>
-        <a href="mailto:thedatabaseplace@outlook.com" class="btn-primary">thedatabaseplace@outlook.com</a>
+        <span class="btn-primary btn-static">thedatabaseplace@outlook.com</span>
       </div>
     </div>
   </section>
