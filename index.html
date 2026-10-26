@@ -92,6 +92,14 @@
 
     .logo span { color: var(--accent-2); }
 
+    /* DatabasePlace branding */
+    .brand-logo {
+      display: block;
+      width: 110px;
+      height: auto;
+      border-radius: 8px;
+    }
+
     .nav-links {
       display: flex;
       gap: 28px;
@@ -488,7 +496,9 @@
 
   <header>
     <nav class="wrap" aria-label="Primary navigation">
-      <a class="logo" href="#top">database<span>_</span>place</a>
+      <a class="logo" href="#top" aria-label="DatabasePlace home">
+        <img src="databaseplace-logo.png" alt="DatabasePlace" class="brand-logo" />
+      </a>
 
       <div class="nav-links">
         <a href="#about">About</a>
